@@ -26,7 +26,7 @@ pipeline {
         stage('docker run') {
             steps {
                 sh '''
-                docker run -d -p 80:8080 -p 10050:10050 -p 10051:10051 chikibevchik/zabbix-one
+                docker run -d -p 80:8080 -p 10050:10050 -p 10051:10051 -p 443:8443 chikibevchik/zabbix-one
                 '''
             }
         }
