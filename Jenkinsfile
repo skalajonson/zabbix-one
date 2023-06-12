@@ -5,7 +5,7 @@ pipeline {
         stage('Create docker image') {
             steps {
                 sh '''
-                docker build -t chikibevchik/zabbix_one .
+                docker build -t chikibevchik/zabbix-one .
                 '''
             }
         }
