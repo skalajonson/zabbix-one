@@ -34,6 +34,20 @@ RUN apt-get update && apt-get install -y zabbix-server-mysql zabbix-frontend-php
 # Clean up
 RUN rm zabbix-release_5.4-1+ubuntu20.04_all.deb
 
+RUN mysql -uroot -p password
+
+RUN mysql -e create database zabbix character set utf8mb4 collate utf8mb4_bin;
+
+RUN mysql -e create user zabbix@localhost identified by 'password';
+
+RUN mysql -e grant all privileges on zabbix.* to zabbix@localhost;
+
+RUN mysql -e set global log_bin_trust_function_creators = 1;
+
+RUN mysql -e set global log_bin_trust_function_creators = 0;
+
+RUN mysql -e quit;
+
 # Expose ports
 EXPOSE 80 10050
 
