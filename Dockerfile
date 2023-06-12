@@ -3,10 +3,10 @@
 #ENV DEBIAN_FRONTEND=noninteractive
 
 #RUN apt-get update && apt-get install -y \
-    zabbix-server-mysql \
-    zabbix-frontend-php \
-    zabbix-agent \
-    mysql-client
+ #   zabbix-server-mysql \
+ #   zabbix-frontend-php \
+  #  zabbix-agent \
+  #  mysql-client
 
 #EXPOSE 8080
 #EXPOSE 80
