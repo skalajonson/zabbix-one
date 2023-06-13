@@ -31,6 +31,9 @@ RUN dpkg -i zabbix-release_5.4-1+ubuntu20.04_all.deb
 # Install Zabbix server, frontend, and agent
 RUN apt-get update && apt-get install -y zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-agent mysql-server zabbix-sql-scripts
 
+RUN service mysql start
+
+
 # Clean up
 RUN rm zabbix-release_5.4-1+ubuntu20.04_all.deb
 
