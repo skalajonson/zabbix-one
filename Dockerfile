@@ -54,8 +54,8 @@ ENTRYPOINT ["docker.sh"]
 
 RUN zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix -p password
 
-RUN touch setcreator.sql && echo SET GLOBAL log_bin_trust_function_creators = 0;
-quit; > setcreator.sql
+#RUN touch setcreator.sql && echo SET GLOBAL log_bin_trust_function_creators = 0;
+#quit; > setcreator.sql
 
 RUN echo DBPassword=password >> /etc/zabbix/zabbix_server.conf
 
