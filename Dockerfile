@@ -21,7 +21,7 @@ RUN apt update && apt install -y apt-transport-https ca-certificates curl softwa
 
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-RUN apt update && apt install -y docker-ce && usermod -aG docker root && service docker start
+RUN apt update && apt install -y docker-ce && usermod -aG docker root && apt install -y docker-compose
 
 #ENV DEBIAN_FRONTEND=noninteractive
 
