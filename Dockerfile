@@ -23,7 +23,7 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/d
 
 RUN apt update && apt install -y docker-ce && usermod -aG docker root && apt install -y docker-compose
 
-RUN mkdir /var/lib/zabbix/ && cd /var/lib/zabbix/ && ln -s /usr/share/zoneinfo/Europe/Kiev localtime && echo 'Europe/Kiev' > timezone && sudo docker network create zabbix-net
+RUN mkdir /var/lib/zabbix/ && cd /var/lib/zabbix/ && ln -s /usr/share/zoneinfo/Europe/Kiev localtime && echo 'Europe/Kiev' > timezone && docker network create zabbix-net
 
 RUN docker run --restart=always -d \
 --name zabbix-postgres \
