@@ -47,7 +47,10 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
+COPY docker.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker.sh
 
+ENTRYPOINT ["docker.sh"]
 
 RUN zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix -p password
 
