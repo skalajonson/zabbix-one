@@ -29,7 +29,7 @@ RUN wget https://repo.zabbix.com/zabbix/6.4/ubuntu/pool/main/z/zabbix-release/za
 
 RUN apt install -y zabbix-server-pgsql zabbix-frontend-php php8.1-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent 
 
-RUN echo listen_addresses = '*' >> /etc/postgresql/15/main/postgresql.conf && service postgresql restart && service postgresql start && su - postgres -c 'createuser --pwprompt zabbix' -p password -p password && su - postgres -c 'createdb -O zabbix zabbix' -p password 
+RUN echo "listen_addresses = '*'" >> /etc/postgresql/15/main/postgresql.conf && service postgresql restart && service postgresql start && su - postgres -c 'createuser --pwprompt zabbix' -p password -p password && su - postgres -c 'createdb -O zabbix zabbix' -p password 
 
 RUN echo DBPassword=password >> /etc/zabbix/zabbix_server.conf && service zabbix-server restart && service zabbix-agent restart && service apache2 restart 
 
