@@ -17,48 +17,66 @@
 
 FROM ubuntu:22.04
 
-RUN apt update && apt install -y apt-transport-https ca-certificates curl software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+RUN apt update && apt upgrade -y && apt-get install -y lsb-release && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' 
 
-RUN apt update && apt install -y docker-ce && usermod -aG docker root && apt install -y docker-compose
+RUN apt-get install -y wget && apt-get install -y gnupg && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && apt-get update && apt-get -y install postgresql
 
-RUN mkdir /var/lib/zabbix/ && cd /var/lib/zabbix/ && ln -s /usr/share/zoneinfo/Europe/Kiev localtime && echo 'Europe/Kiev' > timezone && docker network create zabbix-net
+RUN service postgresql start && apt-get install -y vim && echo host    zabbix          zabbix          127.0.0.1/32            md5 >> /etc/postgresql/15/main/pg_hba.conf && service postgresql restart
 
-RUN docker run --restart=always -d \
---name zabbix-postgres \
---network zabbix-net \
--v /var/lib/zabbix/timezone:/etc/timezone \
--v /var/lib/zabbix/localtime:/etc/localtime \
--e POSTGRES_PASSWORD=zabbix \
--e POSTGRES_USER=zabbix \
--d chikibevchik/zabbix:postgres
+RUN wget https://repo.zabbix.com/zabbix/6.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.4-1+ubuntu22.04_all.deb && dpkg -i zabbix-release_6.4-1+ubuntu22.04_all.deb && apt update
 
-RUN docker run --restart=always \
---name zabbix-server \
---network zabbix-net \
--v /var/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts \
--v /var/lib/zabbix/timezone:/etc/timezone \
--v /var/lib/zabbix/localtime:/etc/localtime \
--p 10051:10051 -e DB_SERVER_HOST="zabbix-postgres" \
--e POSTGRES_USER="zabbix" \
--e POSTGRES_PASSWORD="zabbix" \
--d chikibevchik/zabbix:server
+RUN apt install -y zabbix-server-pgsql zabbix-frontend-php php8.1-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent 
 
-RUN docker run --restart=always \
---name zabbix-web \
--p 80:8080 -p 443:8443 \
---network zabbix-net \
--e DB_SERVER_HOST="zabbix-postgres" \
--v /var/lib/zabbix/timezone:/etc/timezone \
--v /var/lib/zabbix/localtime:/etc/localtime \
--e POSTGRES_USER="zabbix" \
--e POSTGRES_PASSWORD="zabbix" \
--e ZBX_SERVER_HOST="zabbix-server" \
--e PHP_TZ="Europe/Kiev" \
--d chikibevchik/zabbix:web
+RUN su - postgres -c 'createuser --pwprompt zabbix' -p password -p password && su - postgres -c 'createdb -O zabbix zabbix' -p password 
 
-EXPOSE 80 10050 10051 443 8443
+RUN echo DBPassword=password >> /etc/zabbix/zabbix_server.conf && service zabbix-server restart && service zabbix-agent restart && service apache2 restart 
+
+EXPOSE 80 10050 10051 5432
+
+#RUN apt update && apt install -y apt-transport-https ca-certificates curl software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+#RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+#RUN apt update && apt install -y docker-ce && usermod -aG docker root && apt install -y docker-compose
+
+#RUN mkdir /var/lib/zabbix/ && cd /var/lib/zabbix/ && ln -s /usr/share/zoneinfo/Europe/Kiev localtime && echo 'Europe/Kiev' > timezone && docker network create zabbix-net
+
+#RUN docker run --restart=always -d \
+#--name zabbix-postgres \
+#--network zabbix-net \
+#-v /var/lib/zabbix/timezone:/etc/timezone \
+#-v /var/lib/zabbix/localtime:/etc/localtime \
+#-e POSTGRES_PASSWORD=zabbix \
+#-e POSTGRES_USER=zabbix \
+#-d chikibevchik/zabbix:postgres
+
+#RUN docker run --restart=always \
+#--name zabbix-server \
+#--network zabbix-net \
+#-v /var/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts \
+#-v /var/lib/zabbix/timezone:/etc/timezone \
+#-v /var/lib/zabbix/localtime:/etc/localtime \
+#-p 10051:10051 -e DB_SERVER_HOST="zabbix-postgres" \
+#-e POSTGRES_USER="zabbix" \
+#-e POSTGRES_PASSWORD="zabbix" \
+#-d chikibevchik/zabbix:server
+
+#RUN docker run --restart=always \
+#--name zabbix-web \
+#-p 80:8080 -p 443:8443 \
+#--network zabbix-net \
+#-e DB_SERVER_HOST="zabbix-postgres" \
+#-v /var/lib/zabbix/timezone:/etc/timezone \
+#-v /var/lib/zabbix/localtime:/etc/localtime \
+#-e POSTGRES_USER="zabbix" \
+#-e POSTGRES_PASSWORD="zabbix" \
+#-e ZBX_SERVER_HOST="zabbix-server" \
+#-e PHP_TZ="Europe/Kiev" \
+#-d chikibevchik/zabbix:web
+
+#EXPOSE 80 10050 10051 443 8443
 
 #ENV DEBIAN_FRONTEND=noninteractive
 
