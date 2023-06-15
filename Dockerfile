@@ -1,3 +1,12 @@
+FROM chikibevchik/zabbixbyjenkins:postgres
+
+FROM chikibevchik/zabbixbyjenkins:server
+
+FROM chikibevchik/zabbixbyjenkins:web
+
+
+
+
 #FROM ubuntu:20.04
 
 #ENV DEBIAN_FRONTEND=noninteractive
@@ -15,25 +24,25 @@
 #EXPOSE 443
 #EXPOSE 8443
 
-FROM ubuntu:22.04
+#FROM ubuntu:22.04
 
-ENV DEBIAN_FRONTEND=noninteractive
+#ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt upgrade -y && apt-get install -y lsb-release && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' 
+#RUN apt update && apt upgrade -y && apt-get install -y lsb-release && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' 
 
-RUN apt-get install -y wget && apt-get install -y gnupg && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && apt-get update && apt-get -y install postgresql
+#RUN apt-get install -y wget && apt-get install -y gnupg && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && apt-get update && apt-get -y install postgresql
 
-RUN service postgresql start && apt-get install -y vim && echo host    zabbix          zabbix          127.0.0.1/32            md5 >> /etc/postgresql/15/main/pg_hba.conf && service postgresql restart
+#RUN service postgresql start && apt-get install -y vim && echo host    zabbix          zabbix          127.0.0.1/32            md5 >> /etc/postgresql/15/main/pg_hba.conf && service postgresql restart
 
-RUN wget https://repo.zabbix.com/zabbix/6.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.4-1+ubuntu22.04_all.deb && dpkg -i zabbix-release_6.4-1+ubuntu22.04_all.deb && apt update
+#RUN wget https://repo.zabbix.com/zabbix/6.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.4-1+ubuntu22.04_all.deb && dpkg -i zabbix-release_6.4-1+ubuntu22.04_all.deb && apt update
 
-RUN apt install -y zabbix-server-pgsql zabbix-frontend-php php8.1-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent 
+#RUN apt install -y zabbix-server-pgsql zabbix-frontend-php php8.1-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent 
 
-RUN echo "listen_addresses = '*'" >> /etc/postgresql/15/main/postgresql.conf && service postgresql restart && service postgresql start && su - postgres -c 'createuser --pwprompt zabbix' -p password -p password && su - postgres -c 'createdb -O zabbix zabbix' -p password 
+#RUN echo "listen_addresses = '*'" >> /etc/postgresql/15/main/postgresql.conf && service postgresql restart && service postgresql start && su - postgres -c 'createuser --pwprompt zabbix' -p password -p password && su - postgres -c 'createdb -O zabbix zabbix' -p password 
 
-RUN echo DBPassword=password >> /etc/zabbix/zabbix_server.conf && service zabbix-server restart && service zabbix-agent restart && service apache2 restart 
+#RUN echo DBPassword=password >> /etc/zabbix/zabbix_server.conf && service zabbix-server restart && service zabbix-agent restart && service apache2 restart 
 
-EXPOSE 80 10050 10051 5432
+#EXPOSE 80 10050 10051 5432
 
 #RUN apt update && apt install -y apt-transport-https ca-certificates curl software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
