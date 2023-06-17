@@ -1,12 +1,12 @@
-FROM ubuntu
+FROM docker
 
-RUN apt update && apt upgrade -y &&  apt install -y apt-transport-https ca-certificates curl software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+#RUN apt update && apt upgrade -y &&  apt install -y apt-transport-https ca-certificates curl software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
-RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+#RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-RUN apt update && apt install -y docker-ce docker-ce-cli containerd.io && service docker start 
+#RUN apt update && apt install -y docker-ce docker-ce-cli containerd.io && service docker start 
 
-RUN curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+RUN apt update && apt upgrade -y && curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
 
 RUN apt install -y git && git clone https://github.com/skalajonson/zabbix-one.git && mkdir zabbix && mv zabbix-one/docker-compose.yml zabbix/ && cd zabbix/ && docker-compose up -d 
 
