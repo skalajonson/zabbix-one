@@ -1,4 +1,4 @@
-FROM docker
+#FROM docker
 
 #RUN apt update && apt upgrade -y &&  apt install -y apt-transport-https ca-certificates curl software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
@@ -6,10 +6,14 @@ FROM docker
 
 #RUN apt update && apt install -y docker-ce docker-ce-cli containerd.io && service docker start 
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache docker-compose
+#RUN apk update && apk upgrade && \
+    #apk add --no-cache docker-compose
 
-RUN service docker start && apk add git && git clone https://github.com/skalajonson/zabbix-one.git && mkdir zabbix && mv zabbix-one/docker-compose.yml zabbix/ && cd zabbix/ && docker-compose up -d 
+#RUN service docker start && apk add git && git clone https://github.com/skalajonson/zabbix-one.git && mkdir zabbix && mv zabbix-one/docker-compose.yml zabbix/ && cd zabbix/ && docker-compose up -d 
+FROM ubuntu
+
+RUN apt update && apt install -y docker-compose && mkdir zabbix/ && apt install -y git && git clone https://github.com/skalajonson/zabbix-one.git && mv zabbix-one/docker-compose.yml zabbix/
+
 
 EXPOSE 80
 EXPOSE 10050
