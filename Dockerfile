@@ -6,7 +6,7 @@ FROM docker
 
 #RUN apt update && apt install -y docker-ce docker-ce-cli containerd.io && service docker start 
 
-RUN apt update && apt install -y python3-pip
+RUN apk update && apk install -y python3-pip
 RUN pip3 install docker-compose
 
 RUN apt install -y git && git clone https://github.com/skalajonson/zabbix-one.git && mkdir zabbix && mv zabbix-one/docker-compose.yml zabbix/ && cd zabbix/ && docker-compose up -d 
