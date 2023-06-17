@@ -8,61 +8,7 @@ RUN apt update && apt install -y docker-ce docker-ce-cli containerd.io && servic
 
 RUN curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
 
-RUN mkdir zabbix && touch /zabbix/docker-compose.yml
-
-RUN echo "version: '3'
-services:
-  zabbix-postgress:
-    image: chikibevchik/zabbix:postgres
-    container_name: zabbix-postgres
-    networks:
-      - zabbix-net
-    volumes:
-      - ./data:/var/lib/postgresql/data
-      - ./var/lib/zabbix/timezone:/etc/timezone:ro
-      - ./var/lib/zabbix/localtime:/etc/localtime:ro
-    environment:
-      - POSTGRES_USER=zabbix
-      - POSTGRES_PASSWORD=zabbix
-
-  zabbix-server:
-    image: chikibevchik/zabbix:server
-    container_name: zabbix-server
-    networks:
-      - zabbix-net
-    volumes:
-      - /var/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
-      - /var/lib/zabbix/timezone:/etc/timezone:ro
-      - /var/lib/zabbix/localtime:/etc/localtime:ro
-    ports:
-      - "10051:10051"
-    environment:
-      - DB_SERVER_HOST=zabbix-postgres
-      - POSTGRES_USER=zabbix
-      - POSTGRES_PASSWORD=zabbix
-
-  zabbix-web:
-    image: chikibevchik/zabbix:web
-    container_name: zabbix-web
-    networks:
-      - zabbix-net
-    volumes:
-      - ./var/lib/zabbix/timezone:/etc/timezone:ro
-      - ./var/lib/zabbix/localtime:/etc/localtime:ro
-    ports:
-      - "80:8080"
-      - "443:8443"
-    environment:
-      - DB_SERVER_HOST=zabbix-postgres
-      - POSTGRES_USER=zabbix
-      - POSTGRES_PASSWORD=zabbix
-      - ZBX_SERVER_HOST=zabbix-server
-      - PHP_TZ=Europe/Kiev
-networks:
-  zabbix-net:
-    driver: bridge" >> /zabbix/docker-compose.yml
-
-RUN docker-compose up -d 
+RUN apt install -y git && git clone https://github.com/skalajonson/zabbix-one.git && mkdir zabbix && mv zabbix-one/docker-compose.yml zabbix/ && cd zabbix/ && docker-compose up -d 
 
 EXPOSE 80
 EXPOSE 10050
