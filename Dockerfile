@@ -9,7 +9,7 @@ FROM docker
 RUN apk update && apk upgrade && \
     apk add --no-cache docker-compose
 
-RUN apt install -y git && git clone https://github.com/skalajonson/zabbix-one.git && mkdir zabbix && mv zabbix-one/docker-compose.yml zabbix/ && cd zabbix/ && docker-compose up -d 
+RUN apk add git && git clone https://github.com/skalajonson/zabbix-one.git && mkdir zabbix && mv zabbix-one/docker-compose.yml zabbix/ && cd zabbix/ && docker-compose up -d 
 
 EXPOSE 80
 EXPOSE 10050
