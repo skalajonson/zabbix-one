@@ -15,10 +15,10 @@ FROM ubuntu
 RUN apt update && apt install -y docker-compose && mkdir zabbix/ && apt install -y git && git clone https://github.com/skalajonson/zabbix-one.git && mv zabbix-one/docker-compose.yml zabbix/
 
 
-EXPOSE 80
-EXPOSE 10051
-EXPOSE 443
-EXPOSE 8443
+#EXPOSE 80
+#EXPOSE 10051
+#EXPOSE 443
+#EXPOSE 8443
 
 #ENV DEBIAN_FRONTEND=noninteractive
 
