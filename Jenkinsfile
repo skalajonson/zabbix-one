@@ -27,7 +27,7 @@ pipeline {
             steps {
                 sh '''
                  #docker run -d -p 80:8080 -p 10051:10051 -p 443:8443 chikibevchik/zabbix-one
-                 docker run -d --privileged -v /var/run/docker.sock:/var/run/docker.sock -p 80:80 -p 10050:10050 -p 10051:10051 -p 443:8443 -ti chikibevchik/zabbix-one 
+                 docker run -d --privileged -v /var/run/docker.sock:/var/run/docker.sock -p 80:8080 -p 10051:10051 -p 443:8443 -ti chikibevchik/zabbix-one 
 
                 '''
             }
