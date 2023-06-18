@@ -16,7 +16,6 @@ RUN apt update && apt install -y docker-compose && mkdir zabbix/ && apt install 
 
 
 EXPOSE 80
-EXPOSE 10050
 EXPOSE 10051
 EXPOSE 443
 EXPOSE 8443
