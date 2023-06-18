@@ -29,6 +29,7 @@ pipeline {
                  #docker run -d -p 80:8080 -p 10051:10051 -p 443:8443 chikibevchik/zabbix-one
                  docker run -d --name zabbix --privileged -v /var/run/docker.sock:/var/run/docker.sock -ti chikibevchik/zabbix-one 
                  docker exec -w /zabbix/ zabbix bash
+                 docker network rm zabbix-net
                  docker network create zabbix-net
                  docker run --restart=always -d \
 --name zabbix-postgres \
