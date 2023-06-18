@@ -28,7 +28,9 @@ pipeline {
                 sh '''
                  #docker run -d -p 80:8080 -p 10051:10051 -p 443:8443 chikibevchik/zabbix-one
                  docker run -d --name zabbix --privileged -v /var/run/docker.sock:/var/run/docker.sock -ti chikibevchik/zabbix-one 
-
+                 docker exec -it zabbix bash
+                 cd zabbix
+                 docker-compose up -d
                 '''
             }
         }
