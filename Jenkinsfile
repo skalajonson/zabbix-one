@@ -12,7 +12,7 @@ pipeline {
         stage('Login') {
             steps {
                 sh '''
-                docker login -u chikibevchik -p topesto777
+                docker login -u chikibevchik -p password
                 '''
             }
         }
